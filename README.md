@@ -1,6 +1,8 @@
-# PyQuant - A Quantitative Finance Library written in Python
+# PyQuant 
 
-## Created by Abhinav Saini
+## A Quantitative Finance Library written in Python
+
+### Created by Abhinav Saini
 
 ### Licensed under MIT License
 
