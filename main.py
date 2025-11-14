@@ -8,7 +8,7 @@ def print_intro_message():
             Welcome to PyQuant
     A Comprehensive Quant Finance Library
     ========================================
-        Copyright (c) 2025 Abhinav Saini
+           Created by Abhinav Saini
          Licensed under the MIT License
     """
     print(intro_message)
