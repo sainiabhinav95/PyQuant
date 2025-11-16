@@ -5,4 +5,8 @@ Created by Abhinav Saini
 Licensed under MIT License  
 
 Usage:
->./main.py --mode PRICE --instrument OPTION --as_of_date 20251010 --verbose
+>pip install python_quant==0.1.3  
+>python_quant --help
+
+Sample BSM Pricing:
+>python_quant --mode RISK --instrument mock_data/eq_option/bsm_eq_option.json --as_of_date 20251010 --verbose D
