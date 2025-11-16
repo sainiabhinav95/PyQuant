@@ -5,7 +5,7 @@ Created by Abhinav Saini
 Licensed under MIT License  
 
 Usage:
->pip install python_quant==0.1.3  
+>pip install python_quant
 >python_quant --help
 
 Sample BSM Pricing:
