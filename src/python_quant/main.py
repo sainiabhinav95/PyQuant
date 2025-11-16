@@ -55,7 +55,7 @@ def main():
     )
     parser.add_argument(
         "--verbose",
-        help="Logging (I for INFO, D for DEBUG) enabled if set to True",
+        help="Logging (I for INFO, D for DEBUG) enabled if set to True"
     )
     parser.add_argument(
         "--input_data_path",
