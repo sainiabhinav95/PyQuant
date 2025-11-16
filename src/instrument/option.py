@@ -12,13 +12,21 @@ class Option:
         CALL = "call"
         PUT = "put"
     def __init__(self, strike_price: float, expiration_date: datetime,
-                  option_type: OptionType = OptionType.EUROPEAN,
+                 underlying_ticker: str,
+                 underlying_type: str,
+                 market_price: float,
+                 option_type: OptionType = OptionType.EUROPEAN,
                   call_put: CallPut = CallPut.CALL,
                   *, conventions: Optional[Dict[str,str]] = {"day_count_convention": "ACT/365"}):
         self.strike_price = strike_price
         self.expiration_date = expiration_date
         self.option_type = option_type
         self.call_put = call_put
+        self.underlying = {
+            "symbol": underlying_ticker,
+            "type": underlying_type
+        }
+        self.market_price = market_price or None
 
         if conventions:
             self.day_count_convention = DayCount(
@@ -26,6 +34,9 @@ class Option:
                     "day_count_convention", "ACT/365"
                 )
             )
+        else:
+            self.day_count_convention = DayCount(convention="ACT/365")
+        
     def __repr__(self):
         return f"EquityOption(strike_price={self.strike_price}, \
         expiration_date={self.expiration_date}, \
@@ -33,6 +44,14 @@ class Option:
     
     def is_expired(self, current_date: datetime) -> bool:
         return current_date > self.expiration_date
+    
+    def time_to_maturity(self, as_of_date: datetime) -> float:
+        if self.is_expired(as_of_date):
+            return 0.0
+        return self.day_count_convention.year_fraction(
+            start_date=as_of_date,
+            end_date=self.expiration_date
+        )
     
     
     

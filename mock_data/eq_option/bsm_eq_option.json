@@ -1,0 +1,12 @@
+{
+    "type": "OPTION",
+    "underlying": {
+        "type": "EQUITY",
+        "symbol": "AAPL"
+    },
+    "option_type": "CALL",
+    "strike": 300.0,
+    "expiry": "20251220",
+    "style": "EUROPEAN",
+    "market_price": 12.0
+}
