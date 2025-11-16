@@ -1,5 +1,6 @@
 from logging import getLogger, INFO, basicConfig, DEBUG
-from typing import Dict, Any
+from typing import Dict, Any, Union
+from pathlib import Path
 from datetime import datetime
 from python_quant.market_data.mkt_data_json import json_market_data_loader
 
@@ -12,7 +13,8 @@ def pretty_print_dict(d: Dict[str, Any], indent: int = 4):
     print("================================")
 
 
-def risk_mode_main(instrument: Dict[str, Any], as_of_date: str, verbose: str):
+def risk_mode_main(instrument: Dict[str, Any], as_of_date: str,
+                    verbose: str, json_path: Union[str, Path]):
     intro_message = """
     ========================================
             WELCOME TO PYQUANT RISK MODE
@@ -37,7 +39,8 @@ def risk_mode_main(instrument: Dict[str, Any], as_of_date: str, verbose: str):
     logger.info(f"Getting Market Data for RISK mode as_of_date: {analysis_date}")
     market_data = json_market_data_loader(
         analysis_date=analysis_date,
-        logger=logger
+        logger=logger,
+        json_path=json_path
     )
     logger.info(f"Instrument details:\n{instrument}")
 
