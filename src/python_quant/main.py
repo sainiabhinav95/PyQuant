@@ -1,7 +1,8 @@
 #!/usr/bin/env -S uv run --active
 
 from argparse import ArgumentParser
-from typing import Any, Dict
+from typing import Any, Dict, Union
+from pathlib import Path
 from python_quant.utils.json import json_file_to_dict
 from python_quant.mode_handler.risk_mode import risk_mode_main
 
@@ -17,12 +18,14 @@ def print_intro_message():
     print(intro_message)
     
 
-def risk_mode(instrument: Dict[str, Any], as_of_date: str, verbose: str):
+def risk_mode(instrument: Dict[str, Any], as_of_date: str,
+               verbose: str, json_path: Union[str, Path]):
     
     risk_mode_main(
         instrument=instrument,
         as_of_date=as_of_date,
         verbose=verbose,
+        json_path=json_path
     )
 
 def price_mode(instrument: Dict[str, Any], as_of_date: str,
@@ -54,6 +57,10 @@ def main():
         "--verbose",
         help="Logging (I for INFO, D for DEBUG) enabled if set to True",
     )
+    parser.add_argument(
+        "--input_data_path",
+        help="Path for input market data JSON files",
+    )
 
     args = parser.parse_args()
     instrument_data = json_file_to_dict(args.instrument) if args.instrument else {}
@@ -73,6 +80,7 @@ def main():
             instrument=instrument_data,
             as_of_date=args.as_of_date,
             verbose=args.verbose,
+            json_path=args.input_data_path
         )
     elif args.mode == "SIMULATE":
         simulate_mode(
