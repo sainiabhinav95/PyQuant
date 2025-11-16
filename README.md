@@ -4,6 +4,9 @@
 Created by Abhinav Saini  
 Licensed under MIT License  
 
+## PyPi Link:
+https://pypi.org/project/python-quant/
+
 ## Installation:
 #### Virtual Environment Method:  
 Create a virtual environment anywhere: 
