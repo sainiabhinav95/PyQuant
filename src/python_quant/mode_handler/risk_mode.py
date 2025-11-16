@@ -25,7 +25,7 @@ def risk_mode_main(instrument: Dict[str, Any], as_of_date: str,
     basicConfig(level=INFO)
     analysis_date = datetime.strptime(as_of_date, "%Y%m%d")
 
-    match verbose.upper():
+    match verbose and verbose.upper():
         case "I":
             logger.setLevel(INFO)
         case "D":
