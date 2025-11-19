@@ -6,7 +6,7 @@ from pathlib import Path
 from python_quant.utils.json import json_file_to_dict
 from python_quant.mode_handler.risk_mode import risk_mode_main
 
-def print_intro_message():
+def print_intro_message() -> None:
     intro_message = """
     ========================================
             Welcome to PyQuant
@@ -19,7 +19,7 @@ def print_intro_message():
     
 
 def risk_mode(instrument: Dict[str, Any], as_of_date: str,
-               verbose: str, json_path: Union[str, Path]):
+               verbose: str, json_path: Union[str, Path]) -> None:
     
     risk_mode_main(
         instrument=instrument,
@@ -29,10 +29,10 @@ def risk_mode(instrument: Dict[str, Any], as_of_date: str,
     )
 
 def price_mode(instrument: Dict[str, Any], as_of_date: str,
-                verbose: str):
+                verbose: str) -> None:
     pass
 
-def simulate_mode(simulate: Dict[str, Any], as_of_date:str, verbose: str):
+def simulate_mode(simulate: Dict[str, Any], as_of_date:str, verbose: str) -> None:
     pass
 
 def main():
@@ -66,8 +66,11 @@ def main():
     instrument_data = json_file_to_dict(args.instrument) if args.instrument else {}
 
     print_intro_message()
+    
 
-    print(f"\tLogging Level: {'INFO' if args.verbose=='I' else 'DEBUG' if args.verbose=='D' else 'DISABLED'}")
+    logging_levels = {'I': 'INFO', 'D': 'DEBUG'}
+    logging_level = logging_levels.get(args.verbose, 'DISABLED')
+    print(f"\tLogging Level: {logging_level}")
 
     if args.mode == "PRICE":
         price_mode(

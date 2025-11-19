@@ -18,7 +18,9 @@ class Option:
                  volatility: float,
                  option_type: OptionType = OptionType.EUROPEAN,
                   call_put: CallPut = CallPut.CALL,
-                  *, conventions: Optional[Dict[str,str]] = {"day_count_convention": "ACT/365"}):
+                  *, 
+                  conventions: Optional[Dict[str,str]] = None
+                  ) -> None:
         self.strike_price = strike_price
         self.expiration_date = expiration_date
         self.option_type = option_type
@@ -39,7 +41,7 @@ class Option:
         else:
             self.day_count_convention = DayCount(convention="ACT/365")
         
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"EquityOption(strike_price={self.strike_price}, \
         expiration_date={self.expiration_date}, \
         option_type='{self.option_type}'), call_put='{self.call_put}', \

@@ -1,6 +1,6 @@
 import numpy as np
 from datetime import datetime
-from typing import Dict, Union
+from typing import Dict
 from scipy.stats import norm
 from python_quant.instrument.option import Option
 from logging import Logger
@@ -8,7 +8,7 @@ from scipy.optimize import newton
 
 class BSMPricer:
     def __init__(self, instrument: Option, as_of_date: datetime,
-                 market_data: Dict[str, Union[dict, float]], logger: Logger):
+                 market_data: Dict[str, float], logger: Logger):
         self.logger = logger
         self.instrument = instrument
         self.as_of_date = as_of_date
@@ -21,8 +21,8 @@ class BSMPricer:
             self.spot_price = ticker_data
             
         self.volatility = instrument.volatility
-        self.risk_free_rate = market_data["risk_free_rate"]
-        self.dividend_yield = market_data["dividend_yield"]
+        self.risk_free_rate = float(market_data["risk_free_rate"])
+        self.dividend_yield = float(market_data["dividend_yield"])
         self.market_price = self.instrument.market_price
 
         self._input_data_check()
@@ -31,7 +31,9 @@ class BSMPricer:
         if self.spot_price is None:
             raise ValueError("Spot price is required for BSM pricing.")
         if self.volatility == 0.0 and self.market_price is None:
-            raise ValueError("Either volatility or market price is required for BSM pricing.")
+            raise ValueError(
+                "Either volatility or market price is required for BSM pricing."
+                )
         if self.risk_free_rate is None:
             raise ValueError("Risk-free rate is required for BSM pricing.")
         if self.instrument.is_expired(self.as_of_date):
@@ -39,7 +41,8 @@ class BSMPricer:
         
         # Calculate some important variables first
         self.time_to_maturity = self.instrument.time_to_maturity(self.as_of_date)
-        self.cp_flag = 1.0 if self.instrument.call_put == Option.CallPut.CALL else -1.0      
+        self.cp_flag = 1.0 if self.instrument.call_put \
+            == Option.CallPut.CALL else -1.0      
 
         self.logger.info(f"""
                          Initializing BSM Pricer with the following parameters:
@@ -50,7 +53,9 @@ class BSMPricer:
                          Dividend Yield: {self.dividend_yield}
                          Market Price: {self.market_price}
                          Time to Maturity: {self.time_to_maturity}   
-                         Call/Put Flag: {"CALL" if self.cp_flag==1.0 else "PUT"}                        
+                         Call/Put Flag: {
+                             "CALL" if self.cp_flag==1.0 else "PUT"
+                             }                        
                          """)
         
         if self.volatility == 0.0 and self.market_price is not None:
@@ -98,7 +103,9 @@ class BSMPricer:
         implied_vol = newton(objective_function,
                              sigma,
                              tol=tol, maxiter=max_iterations)
-        self.logger.info(f"Implied Volatility calculated from market price: {implied_vol}")
+        self.logger.info(
+            f"Implied Volatility calculated from market price: {implied_vol}"
+            )
         return float(implied_vol)
         
     
@@ -121,13 +128,31 @@ class BSMPricer:
             return option_price
     def greeks(self) -> Dict[str, float]:
         option_price = self.market_price or self.price()
-        delta = self.cp_flag * np.exp(-self.dividend_yield * self.time_to_maturity) * norm.cdf(self.cp_flag * self.d1)  # type: ignore
-        gamma = (np.exp(-self.dividend_yield * self.time_to_maturity) * norm.pdf(self.d1)) / (self.spot_price * self.volatility * np.sqrt(self.time_to_maturity))  # type: ignore
-        theta = (- (self.spot_price * self.volatility * np.exp(-self.dividend_yield * self.time_to_maturity) * norm.pdf(self.d1)) / (2 * np.sqrt(self.time_to_maturity))  # type: ignore
-                 - self.cp_flag * self.risk_free_rate * self.instrument.strike_price * np.exp(-self.risk_free_rate * self.time_to_maturity) * norm.cdf(self.cp_flag * self.d2)  # type: ignore
-                 + self.cp_flag * self.dividend_yield * self.spot_price * np.exp(-self.dividend_yield * self.time_to_maturity) * norm.cdf(self.cp_flag * self.d1))  # type: ignore
-        rho = self.cp_flag * self.instrument.strike_price * self.time_to_maturity * np.exp(-self.risk_free_rate * self.time_to_maturity) * norm.cdf(self.cp_flag * self.d2)  # type: ignore
-        vega = self.spot_price * np.exp(-self.dividend_yield * self.time_to_maturity) * norm.pdf(self.d1) * np.sqrt(self.time_to_maturity)  # type: ignore
+        delta = self.cp_flag * np.exp(
+            -self.dividend_yield * self.time_to_maturity
+            ) * norm.cdf(self.cp_flag * self.d1)  # type: ignore
+        gamma = (np.exp(
+            -self.dividend_yield * self.time_to_maturity
+            ) * norm.pdf(self.d1)) / (
+                self.spot_price * self.volatility * np.sqrt(self.time_to_maturity)
+                )  # type: ignore
+        theta = (- (self.spot_price * self.volatility * np.exp(
+                    -self.dividend_yield * self.time_to_maturity
+                    ) * norm.pdf(self.d1)) / (2 * np.sqrt(self.time_to_maturity))  # type: ignore
+                 - self.cp_flag * self.risk_free_rate * self.instrument.strike_price \
+                    * np.exp(
+                        -self.risk_free_rate * self.time_to_maturity
+                        ) * norm.cdf(self.cp_flag * self.d2)  # type: ignore
+                 + self.cp_flag * self.dividend_yield * self.spot_price * np.exp(
+                     -self.dividend_yield * self.time_to_maturity
+                     ) * norm.cdf(self.cp_flag * self.d1))  # type: ignore
+        rho = self.cp_flag * self.instrument.strike_price \
+            * self.time_to_maturity * np.exp(
+                -self.risk_free_rate * self.time_to_maturity
+                ) * norm.cdf(self.cp_flag * self.d2)  # type: ignore
+        vega = self.spot_price * np.exp(
+            -self.dividend_yield * self.time_to_maturity
+            ) * norm.pdf(self.d1) * np.sqrt(self.time_to_maturity)  # type: ignore
 
         greeks = {
             "price": option_price,

@@ -19,3 +19,12 @@ dependencies = [
 ]
 [project.scripts]
 python_quant = "python_quant.main:main"
+
+[tool.ruff]
+# Optionally, specify files and directories to include or exclude
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "B"]
+
+
