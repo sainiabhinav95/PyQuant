@@ -2,7 +2,7 @@ from datetime import datetime
 class DayCount:
     """A class representing day count conventions for financial calculations."""
     
-    def __init__(self, convention: str):
+    def __init__(self, convention: str) -> None:
         self.convention = convention and convention.upper()
     
     def year_fraction(self, start_date: datetime, end_date: datetime) -> float:

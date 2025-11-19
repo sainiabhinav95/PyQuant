@@ -3,6 +3,8 @@ from typing import Dict, Any, Union
 from pathlib import Path
 from datetime import datetime
 from python_quant.market_data.mkt_data_json import json_market_data_loader
+from python_quant.mode_handler.option.risk_mode_option_handler \
+    import risk_mode_option_handler
 
 def pretty_print_output(instrument: Dict[str, Any],
                          risk: Dict[str, Any], indent: int = 4):
@@ -55,7 +57,6 @@ def risk_mode_main(instrument: Dict[str, Any], as_of_date: str,
 
     match instrument_type.upper():
         case "OPTION":
-            from python_quant.mode_handler.option.risk_mode_option_handler import risk_mode_option_handler
             risk = risk_mode_option_handler(
                 instrument=instrument,
                 as_of_date=analysis_date,
@@ -65,7 +66,9 @@ def risk_mode_main(instrument: Dict[str, Any], as_of_date: str,
             pretty_print_output(instrument, risk)
         case _:
             raise NotImplementedError(
-                f"RISK mode not implemented for instrument type: {instrument.get('type')}"
+                f"RISK mode not implemented for instrument type: {
+                    instrument.get('type')
+                    }"
             )
 
 
