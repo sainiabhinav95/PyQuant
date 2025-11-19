@@ -8,15 +8,17 @@ def risk_mode_option_handler(
     as_of_date: datetime,
     market_data: Dict[str, Any],
     logger: Logger,
-):
+):  
+    underlying = instrument["underlying"]
     option = Option(
         strike_price=float(instrument["strike"]),
         expiration_date= datetime.strptime(
             instrument["expiry"], "%Y%m%d"
         ),
-        market_price=instrument["market_price"],
-        underlying_ticker=instrument["underlying"]["symbol"],
-        underlying_type=instrument["underlying"]["type"],
+        market_price=instrument.get("market_price", None),
+        volatility=float(market_data[underlying["symbol"]].get("volatility")),
+        underlying_ticker=underlying["symbol"],
+        underlying_type=underlying["type"],
         call_put=Option.CallPut.CALL
         if instrument["option_type"].upper() == "CALL"
         else Option.CallPut.PUT,
@@ -34,7 +36,7 @@ def risk_mode_option_handler(
             pricer = BSMPricer(
                 instrument=option,
                 as_of_date=as_of_date,
-                market_data=market_data[as_of_date.strftime("%Y%m%d")],
+                market_data=market_data,
                 logger=logger
             )
             return pricer.greeks()

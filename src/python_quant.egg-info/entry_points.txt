@@ -1,2 +1,0 @@
-[console_scripts]
-python_quant = python_quant.main:main

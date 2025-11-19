@@ -4,13 +4,20 @@ from pathlib import Path
 from datetime import datetime
 from python_quant.market_data.mkt_data_json import json_market_data_loader
 
-def pretty_print_dict(d: Dict[str, Any], indent: int = 4):
-    print("================================")
-    print("RISK MODE OUTPUT")
-    print("================================")
-    for key, value in d.items():
-        print(f"{key}: {value}")
-    print("================================")
+def pretty_print_output(instrument: Dict[str, Any],
+                         risk: Dict[str, Any], indent: int = 4):
+    # Indent for better readability
+    print("\t================================")
+    print("\tRISK MODE OUTPUT")
+    print("\t================================")
+    print("\tInstrument Details\n")
+    for key, value in instrument.items():
+        print(f"\t{key}: {value}")
+    print("\t================================")
+    print("\tCalculated Risk Metrics\n")
+    for key, value in risk.items():
+        print(f"\t{key}: {value}")
+    print("\t================================")
 
 
 def risk_mode_main(instrument: Dict[str, Any], as_of_date: str,
@@ -41,21 +48,21 @@ def risk_mode_main(instrument: Dict[str, Any], as_of_date: str,
         analysis_date=analysis_date,
         logger=logger,
         json_path=json_path
-    )
+    ).get(as_of_date, {})
     logger.info(f"Instrument details:\n{instrument}")
 
     instrument_type = str(instrument.get("type"))
 
     match instrument_type.upper():
         case "OPTION":
-            from python_quant.mode_handler.risk_mode_option_handler import risk_mode_option_handler
+            from python_quant.mode_handler.option.risk_mode_option_handler import risk_mode_option_handler
             risk = risk_mode_option_handler(
                 instrument=instrument,
                 as_of_date=analysis_date,
                 market_data=market_data,
                 logger=logger,
             )
-            pretty_print_dict(risk)
+            pretty_print_output(instrument, risk)
         case _:
             raise NotImplementedError(
                 f"RISK mode not implemented for instrument type: {instrument.get('type')}"

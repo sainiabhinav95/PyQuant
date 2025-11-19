@@ -3,7 +3,8 @@
         "risk_free_rate": 0.05,
         "dividend_yield": 0.02,
         "AAPL": {
-            "spot_price": 272.0
+            "spot_price": 272.0,
+            "volatility": 0.35
         }
     }
 }

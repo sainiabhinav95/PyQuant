@@ -5,8 +5,7 @@
         "symbol": "AAPL"
     },
     "option_type": "CALL",
-    "strike": 300.0,
-    "expiry": "20251220",
-    "style": "EUROPEAN",
-    "market_price": 12.0
+    "strike": 280.0,
+    "expiry": "20261220",
+    "style": "EUROPEAN"
 }

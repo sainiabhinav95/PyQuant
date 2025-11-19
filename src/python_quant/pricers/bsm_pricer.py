@@ -20,7 +20,7 @@ class BSMPricer:
         else:
             self.spot_price = ticker_data
             
-        self.volatility = market_data.get("volatility", 0.0)
+        self.volatility = instrument.volatility
         self.risk_free_rate = market_data["risk_free_rate"]
         self.dividend_yield = market_data["dividend_yield"]
         self.market_price = self.instrument.market_price
@@ -50,7 +50,7 @@ class BSMPricer:
                          Dividend Yield: {self.dividend_yield}
                          Market Price: {self.market_price}
                          Time to Maturity: {self.time_to_maturity}   
-                         Call/Put Flag: {self.cp_flag}                        
+                         Call/Put Flag: {"CALL" if self.cp_flag==1.0 else "PUT"}                        
                          """)
         
         if self.volatility == 0.0 and self.market_price is not None:
@@ -63,6 +63,9 @@ class BSMPricer:
                     market_price=self.market_price,
                     cp_flag=self.cp_flag
                 )
+        else:
+            self.logger.info(f"Using provided volatility: {self.volatility}")
+            self.market_price = self.price()
         
         
     def _bsm_price_from_vol(self, S_o: float, K: float,
@@ -82,8 +85,8 @@ class BSMPricer:
                                     r: float, d: float, t: float,
                                     market_price: float,
                                     cp_flag: float,
-                                    tol: float = 1e-6,
-                                    max_iterations: int = 10) -> float:
+                                    tol: float = 1e-10,
+                                    max_iterations: int = 100) -> float:
         sigma = 0.2  # initial guess
         def objective_function(vol):
             if vol <= 0:
@@ -96,7 +99,7 @@ class BSMPricer:
                              sigma,
                              tol=tol, maxiter=max_iterations)
         self.logger.info(f"Implied Volatility calculated from market price: {implied_vol}")
-        return implied_vol
+        return float(implied_vol)
         
     
     def price(self) -> float:
@@ -117,7 +120,7 @@ class BSMPricer:
             )
             return option_price
     def greeks(self) -> Dict[str, float]:
-        option_price = self.price()
+        option_price = self.market_price or self.price()
         delta = self.cp_flag * np.exp(-self.dividend_yield * self.time_to_maturity) * norm.cdf(self.cp_flag * self.d1)  # type: ignore
         gamma = (np.exp(-self.dividend_yield * self.time_to_maturity) * norm.pdf(self.d1)) / (self.spot_price * self.volatility * np.sqrt(self.time_to_maturity))  # type: ignore
         theta = (- (self.spot_price * self.volatility * np.exp(-self.dividend_yield * self.time_to_maturity) * norm.pdf(self.d1)) / (2 * np.sqrt(self.time_to_maturity))  # type: ignore
@@ -128,6 +131,7 @@ class BSMPricer:
 
         greeks = {
             "price": option_price,
+            "implied_volatility": self.volatility,
             "delta": delta,
             "gamma": gamma,
             "theta": theta,
