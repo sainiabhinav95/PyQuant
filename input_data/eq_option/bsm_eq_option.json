@@ -4,8 +4,9 @@
         "type": "EQUITY",
         "symbol": "AAPL"
     },
-    "option_type": "CALL",
+    "option_type": "PUT",
     "strike": 280.0,
     "expiry": "20261220",
-    "style": "EUROPEAN"
+    "style": "EUROPEAN",
+    "market_price": 15.0
 }

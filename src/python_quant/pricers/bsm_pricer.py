@@ -4,7 +4,7 @@ from typing import Dict
 from scipy.stats import norm
 from python_quant.instrument.option import Option
 from logging import Logger
-from scipy.optimize import newton
+from scipy.optimize import brentq
 
 class BSMPricer:
     def __init__(self, instrument: Option, as_of_date: datetime,
@@ -58,7 +58,8 @@ class BSMPricer:
                              }                        
                          """)
         
-        if self.volatility == 0.0 and self.market_price is not None:
+        if self.market_price is not None:
+            self.logger.info("Calculating implied volatility from market price.")
             self.volatility = self._volatility_from_market_price(
                     S_o=self.spot_price,
                     K=self.instrument.strike_price,
@@ -90,23 +91,20 @@ class BSMPricer:
                                     r: float, d: float, t: float,
                                     market_price: float,
                                     cp_flag: float,
-                                    tol: float = 1e-10,
+                                    tol: float = 1e-6,
                                     max_iterations: int = 100) -> float:
-        sigma = 0.2  # initial guess
         def objective_function(vol):
-            if vol <= 0:
-                return 1000000  # Return a large difference if vol is non-positive
-            self.logger.debug(f"Calculating objective function with vol={vol}")
             price = self._bsm_price_from_vol(S_o, K, r, d, t, vol, cp_flag)
-            return price - market_price
+            error = price - market_price
+            self.logger.debug(f"Error using vol={vol}: {error}")
+            return error
         
-        implied_vol = newton(objective_function,
-                             sigma,
-                             tol=tol, maxiter=max_iterations)
+        implied_vol = brentq(objective_function, 1e-8, 1.0, 
+                             xtol=tol, maxiter=max_iterations)
         self.logger.info(
             f"Implied Volatility calculated from market price: {implied_vol}"
             )
-        return float(implied_vol)
+        return float(implied_vol) # pyright: ignore[reportArgumentType]
         
     
     def price(self) -> float:
