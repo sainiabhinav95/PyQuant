@@ -14,7 +14,8 @@ class Option:
     def __init__(self, strike_price: float, expiration_date: datetime,
                  underlying_ticker: str,
                  underlying_type: str,
-                 market_price: float,
+                 market_price: float | None,
+                 volatility: float,
                  option_type: OptionType = OptionType.EUROPEAN,
                   call_put: CallPut = CallPut.CALL,
                   *, conventions: Optional[Dict[str,str]] = {"day_count_convention": "ACT/365"}):
@@ -27,6 +28,7 @@ class Option:
             "type": underlying_type
         }
         self.market_price = market_price or None
+        self.volatility = volatility
 
         if conventions:
             self.day_count_convention = DayCount(
@@ -40,7 +42,10 @@ class Option:
     def __repr__(self):
         return f"EquityOption(strike_price={self.strike_price}, \
         expiration_date={self.expiration_date}, \
-        option_type='{self.option_type}'), call_put='{self.call_put}'"
+        option_type='{self.option_type}'), call_put='{self.call_put}', \
+        underlying_ticker='{self.underlying['symbol']}', \
+        underlying_type='{self.underlying['type']}', \
+        market_price={self.market_price}, volatility={self.volatility})"
     
     def is_expired(self, current_date: datetime) -> bool:
         return current_date > self.expiration_date

@@ -67,7 +67,7 @@ def main():
 
     print_intro_message()
 
-    print(f"Logging Level: {'INFO' if args.verbose=='I' else 'DEBUG' if args.verbose=='D' else 'DISABLED'}")
+    print(f"\tLogging Level: {'INFO' if args.verbose=='I' else 'DEBUG' if args.verbose=='D' else 'DISABLED'}")
 
     if args.mode == "PRICE":
         price_mode(
