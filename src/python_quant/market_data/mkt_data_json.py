@@ -4,8 +4,10 @@ from logging import Logger as logger
 from typing import Union
 from pathlib import Path
 
-def json_market_data_loader(analysis_date: datetime, logger: logger,
-                            json_path: Union[Path, str]) -> dict:
+
+def json_market_data_loader(
+    analysis_date: datetime, logger: logger, json_path: Union[Path, str]
+) -> dict:
     """
     Load market data from a JSON file and return as a dictionary.
 

@@ -27,4 +27,17 @@ src = ["src", "tests"]
 [tool.ruff.lint]
 select = ["E", "F", "B"]
 
+[dependency-groups]
+dev = [
+    "pytest>=9.0.1",
+    "pytest-cov>=7.0.0",
+]
+
+[tool.pytest.ini_options]
+addopts = "--maxfail=1 --cov=testing_demo"
+testpaths = [
+    "tests",
+]
+
+
 

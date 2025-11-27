@@ -3,8 +3,7 @@ from pathlib import Path
 from typing import Dict, Any
 
 
-def write_output_to_csv(data: Dict[str, Any],
-                    csv_path: str) -> None:
+def write_output_to_csv(data: Dict[str, Any], csv_path: str) -> None:
     """
     Write the given data to a CSV file.
     Format of data:
@@ -25,6 +24,7 @@ def write_output_to_csv(data: Dict[str, Any],
     csv_file = Path(csv_path)
     csv_file.parent.mkdir(parents=True, exist_ok=True)
     df.write_csv(csv_file)
+
 
 def read_csv_to_df(csv_path: str) -> pl.DataFrame:
     """
