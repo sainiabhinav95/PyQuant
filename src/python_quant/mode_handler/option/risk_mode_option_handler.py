@@ -2,6 +2,7 @@ from typing import Dict, Any
 from datetime import datetime
 from logging import Logger
 from python_quant.instrument.option import Option
+from python_quant.pricers.bsm_pricer import BSMPricer
 
 def risk_mode_option_handler(
     instrument: Dict[str, Any],
@@ -32,7 +33,6 @@ def risk_mode_option_handler(
         case "EUROPEAN":
             logger.info("Processing EUROPEAN option in RISK mode.")
             logger.info(f"Using BSM Pricer for option: {option}")
-            from python_quant.pricers.bsm_pricer import BSMPricer
             pricer = BSMPricer(
                 instrument=option,
                 as_of_date=as_of_date,
