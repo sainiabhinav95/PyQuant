@@ -33,7 +33,10 @@ def risk_mode_main(instrument: Dict[str, Any], as_of_date: str,
     """
     print(intro_message)
     logger = getLogger("pyquant.risk_mode")
-    basicConfig(level=INFO)
+    basicConfig(level=INFO,
+                format="{asctime} - {levelname} - {message}",
+                style="{")
+    
     analysis_date = datetime.strptime(as_of_date, "%Y%m%d")
 
     match verbose and verbose.upper():
