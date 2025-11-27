@@ -25,6 +25,8 @@ pytz==2025.2
     # via
     #   python-quant (pyproject.toml)
     #   pandas
+ruff==0.14.6
+    # via python-quant (pyproject.toml)
 scipy==1.15.3
     # via python-quant (pyproject.toml)
 six==1.17.0
