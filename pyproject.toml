@@ -3,7 +3,7 @@ name = "python-quant"
 version = "0.1.7"
 description = "Quantitative Finance Library in Python"
 readme = { file = "README.md", content-type = "text/markdown" }
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "mpmath",
     "numpy",
@@ -38,6 +38,9 @@ addopts = "--maxfail=1 --cov=testing_demo"
 testpaths = [
     "tests",
 ]
+
+[tool.uv]
+    package = true
 
 
 
