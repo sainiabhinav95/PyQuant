@@ -5,6 +5,7 @@ from typing import Any, Dict, Union
 from pathlib import Path
 from python_quant.utils.json import json_file_to_dict
 from python_quant.mode_handler.risk_mode import risk_mode_main
+import os
 
 def print_intro_message() -> None:
     intro_message = """
@@ -19,35 +20,41 @@ def print_intro_message() -> None:
     
 
 def risk_mode(instrument: Dict[str, Any], as_of_date: str,
-               verbose: str, json_path: Union[str, Path]) -> None:
+               verbose: str, json_path: Union[str, Path],
+               write_csv: bool, csv_path: str) -> None:
     
     risk_mode_main(
         instrument=instrument,
         as_of_date=as_of_date,
         verbose=verbose,
-        json_path=json_path
+        json_path=json_path,
+        write_csv=write_csv,
+        csv_path=csv_path
     )
 
 def price_mode(instrument: Dict[str, Any], as_of_date: str,
-                verbose: str) -> None:
+                verbose: str, write_csv: bool, csv_path: str) -> None:
     pass
 
-def simulate_mode(simulate: Dict[str, Any], as_of_date:str, verbose: str) -> None:
+def calibrate_mode(calibrate: Dict[str, Any], as_of_date:str,
+                    verbose: str, write_csv: bool, csv_path: str) -> None:
     pass
 
 def main():
+
+    dir_path = os.getcwd()
     parser = ArgumentParser(description="PyQuant Main Execution Script")
     parser.add_argument(
         "--mode",
-        help="Mode [PRICE, RISK, SIMULATE]"
+        help="Mode [PRICE, RISK, CALIBRATE]"
     )
     parser.add_argument(
         "--instrument",
         help="Instrument for PRICE/RISK mode to be passed as a JSON file",
     )
     parser.add_argument(
-        "--simulate",
-        help="Simulation parameters for SIMULATE mode",
+        "--calibrate",
+        help="Simulation parameters for calibrate mode",
     )
     parser.add_argument(
         "--as_of_date",
@@ -61,6 +68,17 @@ def main():
         "--input_data_path",
         help="Path for input market data JSON files",
     )
+    parser.add_argument(
+        "--write_csv",
+        help="Enable writing output to CSV if set to True",
+        default=False, action="store_true"
+    )
+    parser.add_argument(
+        "--csv_path",
+        help="Path for input market data JSON files",
+        default=os.path.join(dir_path, "output.csv")
+    )
+
 
     args = parser.parse_args()
     instrument_data = json_file_to_dict(args.instrument) if args.instrument else {}
@@ -72,27 +90,37 @@ def main():
     logging_level = logging_levels.get(args.verbose, 'DISABLED')
     print(f"\tLogging Level: {logging_level}")
 
+    print(f"\tWrite CSV: {args.write_csv}")
+    if args.write_csv:
+        print(f"\tCSV Path: {args.csv_path}")
+
     if args.mode == "PRICE":
         price_mode(
             instrument=instrument_data,
             as_of_date=args.as_of_date,
             verbose=args.verbose,
+            write_csv=args.write_csv,
+            csv_path=args.csv_path
         )
     elif args.mode == "RISK":
         risk_mode(
             instrument=instrument_data,
             as_of_date=args.as_of_date,
             verbose=args.verbose,
-            json_path=args.input_data_path
+            json_path=args.input_data_path,
+            write_csv=args.write_csv,
+            csv_path=args.csv_path
         )
-    elif args.mode == "SIMULATE":
-        simulate_mode(
-            simulate=args.simulate,
+    elif args.mode == "CALIBRATE":
+        calibrate_mode(
+            calibrate=args.calibrate,
             verbose=args.verbose,
             as_of_date=args.as_of_date,
+            write_csv=args.write_csv,
+            csv_path=args.csv_path
         )
     else:
-        print("Invalid mode selected. Please choose PRICE, RISK, or SIMULATE.")
+        print("Invalid mode selected. Please choose PRICE, RISK, or CALIBRATE.")
     
 
 if __name__ == "__main__":

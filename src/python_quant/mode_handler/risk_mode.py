@@ -3,6 +3,7 @@ from typing import Dict, Any, Union
 from pathlib import Path
 from datetime import datetime
 from python_quant.market_data.mkt_data_json import json_market_data_loader
+from python_quant.utils.csv import write_output_to_csv
 from python_quant.mode_handler.option.risk_mode_option_handler \
     import risk_mode_option_handler
 
@@ -23,7 +24,8 @@ def pretty_print_output(instrument: Dict[str, Any],
 
 
 def risk_mode_main(instrument: Dict[str, Any], as_of_date: str,
-                    verbose: str, json_path: Union[str, Path]):
+                    verbose: str, json_path: Union[str, Path],
+                    write_csv: bool, csv_path: str ) -> None:
     intro_message = """
     ========================================
             WELCOME TO PYQUANT RISK MODE
@@ -57,19 +59,29 @@ def risk_mode_main(instrument: Dict[str, Any], as_of_date: str,
 
     match instrument_type.upper():
         case "OPTION":
-            risk = risk_mode_option_handler(
+            instrument_dict, risk = risk_mode_option_handler(
                 instrument=instrument,
                 as_of_date=analysis_date,
                 market_data=market_data,
                 logger=logger,
             )
-            pretty_print_output(instrument, risk)
         case _:
             raise NotImplementedError(
                 f"RISK mode not implemented for instrument type: {
                     instrument.get('type')
                     }"
             )
+        
+    pretty_print_output(instrument, risk)
+
+    if write_csv:
+        output_data = {
+            "instrument_details": instrument_dict,
+            "risk_metrics": risk
+        }
+        write_output_to_csv(data=output_data, csv_path=csv_path)
+        logger.info(f"Risk mode output written to CSV at: {csv_path}")
+
 
 
 
