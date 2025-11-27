@@ -8,7 +8,7 @@ def risk_mode_option_handler(
     as_of_date: datetime,
     market_data: Dict[str, Any],
     logger: Logger,
-):  
+) -> tuple[Dict[str, Any], Dict[str, Any]]:  
     underlying = instrument["underlying"]
     option = Option(
         strike_price=float(instrument["strike"]),
@@ -39,7 +39,7 @@ def risk_mode_option_handler(
                 market_data=market_data,
                 logger=logger
             )
-            return pricer.greeks()
+            return option.to_dict(), pricer.greeks()
             
         case _:
             raise NotImplementedError(

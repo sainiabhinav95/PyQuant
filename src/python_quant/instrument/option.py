@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Dict
+from typing import Optional, Dict, Any
 from python_quant.conventions.day_count import DayCount
 
 class Option:
@@ -59,6 +59,19 @@ class Option:
             start_date=as_of_date,
             end_date=self.expiration_date
         )
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "strike_price": self.strike_price,
+            "expiration_date": self.expiration_date.strftime("%Y-%m-%d"),
+            "option_type": self.option_type.value,
+            "call_put": self.call_put.value,
+            "underlying_ticker": self.underlying.get("symbol"),
+            "underlying_type": self.underlying.get("type"),
+            "market_price": self.market_price,
+            "volatility": self.volatility,
+            "day_count_convention": self.day_count_convention.convention
+        }
     
     
     
