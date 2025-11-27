@@ -16,11 +16,14 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
-    env:
-      UV_PYTHON: ${{ matrix.python-version }}
+
     steps:
-      - name: Install uv
+      - uses: actions/checkout@v5
+
+      - name: Install uv and set the Python version
         uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python-version }}
 
       - name: Install the project
         run: uv sync --locked --all-extras --dev
