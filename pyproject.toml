@@ -5,6 +5,7 @@ description = "Quantitative Finance Library in Python"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
 dependencies = [
+    "dash>=3.3.0",
     "mpmath",
     "numpy",
     "pandas",
