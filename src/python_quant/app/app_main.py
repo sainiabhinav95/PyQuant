@@ -13,9 +13,9 @@ class WebApp:
 
     def app_setup(self):
         self.df = pl.read_csv(
-    "https://raw.githubusercontent.com/plotly/datasets/master/gapminder_unfiltered.csv"
-    )
-    
+            "https://raw.githubusercontent.com/plotly/datasets/master/gapminder_unfiltered.csv"
+        )
+
     def app_callbacks(self):
         @self.app.callback(
             Output("graph-content", "figure"),
@@ -47,9 +47,6 @@ class WebApp:
             ),
             dcc.Graph(id="graph-content"),
         ]
-    
+
     def run(self):
         self.app.run(debug=True, use_reloader=False)
-    
-    
-
