@@ -4,6 +4,7 @@ version = "0.1.7"
 description = "Quantitative Finance Library in Python"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
+license = { text = "MIT" }
 dependencies = [
     "dash>=3.3.0",
     "mpmath",
