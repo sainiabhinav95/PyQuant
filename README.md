@@ -22,6 +22,12 @@ Install the package:
 >pip install python_quant    
 >python_quant --help
 
+Start the Web App:
+>python_quant --web_app
+
+
+Command Line Usage:
+
 Download the input_data folder from the repo and place it anywhere. We need to pass it to the commandline tool:  
 
 >python_quant --mode RISK --instrument input_data/eq_option/bsm_eq_option.json --input_data_path input_data/market_data --as_of_date 20251010 --verbose D
@@ -31,7 +37,9 @@ Directly install using pip:
 > pip install python_quant  
 
 
-Sample Output (BSM Pricing):
+
+
+#### Sample Output (BSM Pricing):
 <blockquote>  
 RISK MODE OUTPUT  
 
