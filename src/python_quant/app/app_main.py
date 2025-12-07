@@ -1,6 +1,7 @@
 from nicegui import ui, app
 from python_quant.utils.text import print_intro_message
 
+
 @ui.page("/")
 def index():
     for url in app.urls:
