@@ -6,22 +6,17 @@ readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
 license = { text = "MIT" }
 dependencies = [
-    "dash>=3.3.0",
-    "mpmath",
-    "numpy",
-    "pandas",
-    "polars",
-    "polars-runtime-32",
-    "python-dateutil",
-    "pytz",
-    "ruff>=0.14.6",
-    "scipy",
-    "six",
-    "sympy",
-    "tzdata",
+    "nicegui>=3.3.1",
+    "numpy>=2.3.5",
+    "polars>=1.35.2",
+    "pytest>=9.0.1",
+    "ruff>=0.14.8",
+    "scipy>=1.16.3",
+    "sympy>=1.14.0",
 ]
 [project.scripts]
 python_quant = "python_quant.main:main"
+pyquant-app = "python_quant.app.app_main:start_app"
 
 [tool.ruff]
 # Optionally, specify files and directories to include or exclude
@@ -44,6 +39,3 @@ testpaths = [
 
 [tool.uv]
     package = true
-
-
-

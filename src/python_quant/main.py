@@ -1,31 +1,10 @@
-#!/usr/bin/env -S uv run --active
-
 from argparse import ArgumentParser
 from typing import Any, Dict, Union
 from pathlib import Path
 from python_quant.utils.json import json_file_to_dict
 from python_quant.mode_handler.risk_mode import risk_mode_main
-from python_quant.app.app_main import WebApp
+from python_quant.utils.text import print_intro_message
 import os
-import sys
-
-
-def print_intro_message() -> None:
-    intro_message = """
-    ========================================
-            Welcome to PyQuant
-    A Comprehensive Quant Finance Library
-    ========================================
-           Created by Abhinav Saini
-         Licensed under the MIT License
-    """
-    print(intro_message)
-
-
-def start_app(debug: bool = False) -> None:
-    webapp = WebApp()
-    webapp.run()
-    sys.exit(0)
 
 
 def risk_mode(
@@ -69,9 +48,6 @@ def calibrate_mode(
 def main():
     dir_path = os.getcwd()
     parser = ArgumentParser(description="PyQuant Main Execution Script")
-    parser.add_argument(
-        "--web_app", help="Run the Dash web application", action="store_true"
-    )
 
     parser.add_argument("--mode", help="Mode [PRICE, RISK, CALIBRATE]")
     parser.add_argument(
@@ -111,9 +87,6 @@ def main():
     logging_levels = {"I": "INFO", "D": "DEBUG"}
     logging_level = logging_levels.get(args.verbose, "DISABLED")
     print(f"\tLogging Level: {logging_level}")
-
-    if args.web_app:
-        start_app(debug=(logging_level == "DEBUG"))
 
     print(f"\tWrite CSV: {args.write_csv}")
     if args.write_csv:
