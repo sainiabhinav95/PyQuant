@@ -23,7 +23,7 @@ Install the package:
 >python_quant --help
 
 Start the Web App:
->python_quant --web_app
+>pyquant-app
 
 
 Command Line Usage:
